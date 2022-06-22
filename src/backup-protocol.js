@@ -118,7 +118,7 @@ const GenericFailMsg = cstruct.compile({
 /**
  * The Subscription class
  */
-export class BackupProtocol extends SlashCommsProtocol {
+export default class BackupProtocol extends SlashCommsProtocol {
     constructor(opts) {
         super(opts)
         this.sharedSecret = ''

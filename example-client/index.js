@@ -1,5 +1,5 @@
 import { SDK } from '@synonymdev/slashtags-sdk'
-import { BackupProtocol } from '../common/backup-protocol.js'
+import BackupProtocol from '../src/backup-protocol.js'
 
 // The backup servers slashtag should be known. This is my test server
 // When you run the server, it will log out it's slashtag - replace this with your backup servers address
