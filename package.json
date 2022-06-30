@@ -1,0 +1,27 @@
+{
+  "name": "backpack-client",
+  "type": "module",
+  "version": "1.0.1",
+  "description": "backup service for bitkit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/synonymdev/backpack-client.git"
+  },
+  "keywords": [],
+  "author": "Synonym",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/synonymdev/backpack-client/issues"
+  },
+  "homepage": "https://github.com/synonymdev/backpack-client#readme",
+  "dependencies": {
+    "@synonymdev/slashtags-sdk": "^1.0.0-alpha.2",
+    "compact-encoding": "^2.7.0",
+    "compact-encoding-struct": "^1.3.0",
+    "sodium-universal": "^3.1.0"
+  }
+}
