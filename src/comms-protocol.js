@@ -166,7 +166,7 @@ export default class SlashCommsProtocol extends SlashProtocol {
      * @returns
      */
     _generateMessageToHash(msg, timestamp) {
-        return Buffer.concat([msg, Buffer.from(`${timestamp}`)])
+        return Buffer([...msg, ...Buffer.from(`${timestamp}`)])
     }
 }
 
