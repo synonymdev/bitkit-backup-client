@@ -3,32 +3,29 @@ import BackupProtocol from '../src/backup-protocol.js'
 
 // The backup servers slashtag should be known. This is my test server
 // When you run the server, it will log out it's slashtag - replace this with your backup servers address
-const serverSlashtag = 'slash://oec3lwxl6j3kyiawchkzaj2lpspg4ztolmoik7kmer6vslxfo2gq/'
+const serverSlashtag = 'slash:mf84none684c69szwqbdguzfpkdgdxuhmtbqpbp65y7gh4uasm5y'
 
 // the backup server and client must both know a shared secret to prevent spam. Set this here
-const sharedSecret = 'exampleSecretThing'
+const sharedSecret = 'secret thinglaksjdfjlkajsklfdjlkajsdfkljlksf'
 
 async function main() {
     // Setup the SDK
     const options = {
         persist: false,
-        protocols: [
-            BackupProtocol,
-        ]
+        storage: './data',
     }
-    const sdk = await SDK.init(options)
+
+    const sdk = new SDK(options)
+    await sdk.ready()
 
     // Generate a new random slashtag for this client
-    const st = sdk.slashtag({ name: 'Alice' });
-    await st.ready();
+    const st = sdk.slashtag('Alice');
 
     // Show it
-    console.log("Example client Slashtag:", st.url.toString())
+    console.log("Example client Slashtag:", st.url)
 
     // Create a new backup protocol
-    const backups = st.protocol(BackupProtocol)
-
-    // Give the protocol the shared secret
+    const backups = new BackupProtocol(st)
     backups.setSecret(sharedSecret)
 
     try {
@@ -36,13 +33,10 @@ async function main() {
         // Valid categories are lower case a-z and . only. Must start and end with a lower case a-z
         const category = 'bitkit.lightning.channels'
 
-        // Some options - setting a timeout to 3000ms. (should be higher for production)
-        // Requests will fail if a response has not been received within this time
-        const opts = { timeout: 3000 }
-
         // Get a list of available backups
         const query = { category }
-        const availableBackupsBefore = await backups.getRecentBackups(serverSlashtag, query, opts)
+        const availableBackupsBefore = await backups.getRecentBackups(serverSlashtag, query)
+        console.log('Available Backups Response:', availableBackupsBefore)
 
         // Prepare some data to back up
         const data = {
@@ -53,29 +47,29 @@ async function main() {
         }
 
         // ask for it to be backed up (throws on error)
-        const status = await backups.backupData(serverSlashtag, data, opts)
+        const status = await backups.backupData(serverSlashtag, data)
         console.log('Backup complete', status)
 
         // another backup of the same data
-        await backups.backupData(serverSlashtag, data, opts)
+        await backups.backupData(serverSlashtag, data)
 
         // Get a list of available backups now (should include our backup above)
-        const availableBackupsAfter = await backups.getRecentBackups(serverSlashtag, query, opts)
-        console.log('Backups:', availableBackupsAfter)
+        const availableBackupsAfter = await backups.getRecentBackups(serverSlashtag, query)
+        console.log('Updated available Backups:', availableBackupsAfter)
 
         // Prepare the data to restore some data
         // Needs our slashtag, category of the data and the timestamp it was saved at
         const restore = {
             category,
-            timestamp: status.timestamp
+            timestamp: status.results.timestamp
         }
 
         // ask for the data
-        const original = await backups.restoreData(serverSlashtag, restore, opts)
+        const original = await backups.restoreData(serverSlashtag, restore)
 
         // show it
         console.log('Restored Data')
-        console.log(original, original.content.toString())
+        console.log(data, original)
     } catch (err) {
         // something went wrong
         console.log("ERROR", err)
