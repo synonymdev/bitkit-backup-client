@@ -144,18 +144,23 @@ export default class BackupProtocol extends SlashtagsRPC {
         return this._requestResponse(name, serverSlashtag, data, options)
     }
 
-
-    async _callHandler(name, data) {
-        const h = this.handlers.find((v) => v.name === name)
-        if (!h) {
-            throw new Error(`No handler for ${name}`)
-        }
-
-        return h.callback(data)
-    }
-
     get id() {
         return 'bitkit.backup.2'
+    }
+
+    /**
+     * Handshake value encoding
+     * @type {import ('compact-encoding').Encoding | undefined }
+     */
+    get handshakeEncoding() { return c.string }
+
+    /**
+     * Return a Handshake sent on channel opening.
+     * @param {SecretStream} stream
+     * @returns {any}
+     */
+    handshake(stream) {
+        return this.sharedSecret
     }
 
     /**
@@ -228,6 +233,21 @@ export default class BackupProtocol extends SlashtagsRPC {
         } catch (err) {
             return this._errorResponse(err.message)
         }
+    }
+
+    /**
+     * Looks up the handler and calls any registered handler for it
+     * @param {*} name 
+     * @param {*} data 
+     * @returns 
+     */
+    async _callHandler(name, data) {
+        const h = this.handlers.find((v) => v.name === name)
+        if (!h) {
+            throw new Error(`No handler for ${name}`)
+        }
+
+        return h.callback(data)
     }
 
     /**

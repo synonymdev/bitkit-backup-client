@@ -72,7 +72,8 @@ async function main() {
         console.log(data, original)
     } catch (err) {
         // something went wrong
-        console.log("ERROR", err)
+        console.log('Error connecting and talking to backpack server')
+        console.log(err)
     }
 }
 

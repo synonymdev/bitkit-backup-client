@@ -1,7 +1,7 @@
 {
   "name": "backpack-client",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "backup service for bitkit",
   "main": "index.js",
   "scripts": {
