@@ -9,6 +9,18 @@ See `example-client/index.js` for an example that performs typical backup steps 
 * Make another query to see that the backup exists
 * Restore from the backup
 
+All responses come back in the following format...
+
+```
+{
+    success: true,
+    error: '<error message is success is false>',
+    results: {
+        // call specific data
+    }
+}
+```
+
 It is recommended that you encrypt all data before sending it to the backup server for maximum security. The backup server can be configured to encrypt all data at rest, but it is still best practice to encrypt on the users device before sending it over the network to the backup server.
 
 All data to be backed up should be labeled with a category - this it intended to help organise backed up data, allowing an application to backup many forms of data in smaller more managable units.
