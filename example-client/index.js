@@ -28,6 +28,16 @@ async function main() {
     const backups = new BackupProtocol(st)
     backups.setSecret(sharedSecret)
 
+    // Example of encrypting a buffer
+    const secret = Buffer.from('secret password', 'utf8')
+    const plain = Buffer.from('Hello World', 'utf8')
+    const encoded = backups.encrypt(plain, secret)
+    console.log('encrypt', plain.toString(), 'to', encoded.toString('hex'))
+
+    // undo
+    const decoded = backups.decrypt(encoded, secret)
+    console.log('decrypted again', decoded.toString())
+
     try {
         // Pick a category that our backups will be linked to
         // Valid categories are lower case a-z and . only. Must start and end with a lower case a-z

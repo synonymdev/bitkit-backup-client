@@ -1,3 +1,4 @@
+import sodium from 'sodium-universal'
 import c from 'compact-encoding'
 import cstruct from 'compact-encoding-struct'
 import SlashtagsRPC from '@synonymdev/slashtags-rpc';
@@ -104,6 +105,53 @@ export default class BackupProtocol extends SlashtagsRPC {
             callback
         })
     }
+
+    /**
+     * encrypt a plain text buffer.
+     * @param {*} plainText - Buffer
+     * @param {*} key - Buffer (32 bytes long)
+     * @returns Buffer containing the encrypted text
+     */
+    encrypt(plainText, key) {
+        // Force Key to be the correct size
+        const safeKey = Buffer.alloc(sodium.crypto_secretbox_KEYBYTES, key)
+
+        // salt
+        const salt = Buffer.alloc(sodium.crypto_secretbox_NONCEBYTES)
+        sodium.randombytes_buf(salt)
+
+        // encrypt it
+        const cipherLen = plainText.length + sodium.crypto_secretbox_MACBYTES
+        const cipherText = Buffer.alloc(cipherLen)
+        sodium.crypto_secretbox_easy(cipherText, plainText, salt, safeKey)
+
+        // combine the salt and ciphertext
+        return Buffer.concat([salt, cipherText])
+    }
+
+    /**
+     * Given a buffer containing encrypted content returned from encrypt() and the same key
+     * returns the plain text buffer
+     * @param {*} cipherText Buffer
+     * @param {*} key Buffer (32 bytes)
+     * @returns Buffer
+     */
+    decrypt(cipherText, key) {
+        // Force Key to be the correct size
+        const safeKey = Buffer.alloc(sodium.crypto_secretbox_KEYBYTES, key)
+
+        // separate out salt and actual cipher text
+        const saltLen = sodium.crypto_secretbox_NONCEBYTES
+        const salt = cipherText.subarray(0, saltLen)
+        const cipher = cipherText.subarray(saltLen)
+
+        // decrypt it
+        const plainText = Buffer.alloc(cipher.length - sodium.crypto_secretbox_MACBYTES)
+        sodium.crypto_secretbox_open_easy(plainText, cipher, salt, safeKey)
+
+        return plainText
+    }
+
 
     /**
      * Clients call this to get a list of recent backups
