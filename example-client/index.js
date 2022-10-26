@@ -3,10 +3,10 @@ import BackupProtocol from '../src/backup-protocol.js'
 
 // The backup servers slashtag should be known. This is my test server
 // When you run the server, it will log out it's slashtag - replace this with your backup servers address
-const serverSlashtag = 'slash:mf84none684c69szwqbdguzfpkdgdxuhmtbqpbp65y7gh4uasm5y'
+const serverSlashtag = 'slash:abc....slashtag.address'
 
 // the backup server and client must both know a shared secret to prevent spam. Set this here
-const sharedSecret = 'secret thinglaksjdfjlkajsklfdjlkajsdfkljlksf'
+const sharedSecret = 'some-shared-secret-between-client-and-server'
 
 async function main() {
     // Setup the SDK
