@@ -20,7 +20,7 @@
   "homepage": "https://github.com/synonymdev/backpack-client#readme",
   "dependencies": {
     "@synonymdev/slashtags-rpc": "^1.0.0-alpha.1",
-    "@synonymdev/slashtags-sdk": "^1.0.0-alpha.19",
+    "@synonymdev/slashtags-sdk": "^1.0.0-alpha.35",
     "compact-encoding": "^2.7.0",
     "compact-encoding-struct": "^1.3.0",
     "sodium-universal": "^3.1.0",
